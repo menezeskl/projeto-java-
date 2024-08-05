@@ -1,0 +1,149 @@
+let contasa = [];
+let contasb = [];
+
+function criarConta() {
+  while(true){
+    const nome = prompt('Seu Nome: (S para sair)\n')
+    if (nome.toUpperCase() == "S"){
+        break
+    }
+    const senha = prompt('Crie uma senha:\n')
+    if (senha.toUpperCase() == "S"){
+        break
+    }
+    contasa.push(nome)
+    contasb.push(senha)
+    console.log("Contas:")
+    contasa.forEach(conta => console.log( "[" + conta + "]"));
+    break;
+  }
+}
+
+function inicio() {
+ while(true){
+  console.log('O que deseja?\n')
+  resposta = prompt('1: Adicionar ou excluir conta;\n2: Ir às compras;\n')
+  if (resposta.toUpperCase() == 1) {
+    escolha = prompt('1: Adicionar. 2: Excluir\n')
+    if (escolha.toUpperCase() == 1) {
+      criarConta()
+      inicio()
+    } else if (escolha.toUpperCase() == 2) {
+      while(true){
+        console.log("EXCLUIR CONTA:")
+        if (contasa.length === 0){
+            console.log("Nenhuma conta encontrada")
+            break;
+        }
+        console.log(contasa)
+        console.log('N se quiser sair')
+        conta = prompt("Qual conta quer excluir?\n")
+        senha = prompt("Confirme com a senha:\n");
+        const pos1 = contasa.indexOf(conta);
+        const pos2 = contasb.indexOf(senha);
+        if (pos1 === pos2 && pos1 !== -1){
+          contasa.splice(pos1, 1);
+          contasb.splice(pos2, 1);
+          console.log("Contas:")
+          console.log(" Conta excluída com sucesso.\n")
+          contasa.forEach(conta => console.log( "[" + conta + "]"));
+          break;
+        } else if (conta.toUpperCase() == "N"){
+            break;
+        } else {
+          console.log("Conta não encontrada ou senha errada.")
+          break;
+        }
+      }
+      inicio()
+    }
+  } else if (resposta.toUpperCase() == 2) {
+      mercado()
+  }
+ }
+}
+
+function mercado(){
+   let produtos = [
+    {nome: "Maçã", preco: 1.5},
+    {nome: "Banana", preco: 2.0},
+    {nome: "Laranja", preco: 1.8},
+    {nome: "Chocolate", preco: 4},
+   ]
+   while(true){
+    login = prompt("COMPRAS:\n Gostaria de colocar sua conta?\n1:Sim\n2:Não\n")
+    if (login == 1){
+        if (contasa.length == 0 && contasb.length == 0 ){
+           console.log("\nOps, nenhuma conta\nGostaria de criar uma?\n")
+           resposta = prompt("1:Sim\n2:Não\n")
+           if (resposta == 1){
+                criarConta()
+           } else {
+            continue
+           }
+        }
+        console.log("Contas: (S para sair)\n" + contasa)
+        conta = prompt("Adicione sua conta: (S para Sair)\n")
+        if (conta.toUpperCase() == "S"){
+            continue;
+        }
+        const pos1 = contasa.indexOf(conta);
+        senha = prompt("Insira sua senha: (S para sair)\n")
+        if (senha.toUpperCase() == "S"){
+            continue;
+        }
+        const pos2 = contasb.indexOf(senha);
+        if (pos1 === -1){
+            console.log("Conta incorreta ou inexistente")
+        } else if (pos2 === -1 || pos2 !== pos1){
+        console.log("Senha incorreta")
+        }
+    } else if (login == 2){
+    } else {
+        continue;
+    }
+    let carrinho = [];
+    while(true){
+        console.log("Produtos:");
+        produtos.forEach((produto, index) => console.log(`${index + 1} - ${produto.nome} - R$ ${produto.preco}`));
+        opcao = prompt("\nO que deseja fazer?\n1: Adicionar produto\n2: Remover produto\n3: Finalizar compra\n")
+        if (opcao == 1){
+            produto = prompt("Qual produto deseja adicionar? (digite o número)\n")
+            if (produto - 1 < 0 || produto - 1 >= produtos.length) {
+                console.log("Produto não encontrado!");
+                continue;
+            }
+            quantidade = prompt("Quantidade?\n")
+            const produtoSelecionado = produtos[produto - 1]
+            carrinho.push({produto: produtoSelecionado.nome, quantidade: quantidade, preco: produtoSelecionado.preco * quantidade})
+            console.log("Carrinho:")
+            carrinho.forEach((item) => console.log(`${item.produto} - ${item.quantidade} - R$ ${item.preco}`))
+        } else if (opcao == 2){
+            console.log("Carrinho:")
+            carrinho.forEach((item, index) => console.log(`${index + 1} - ${item.produto} - ${item.quantidade} - R$ ${item.preco}`))
+            produto = prompt("Qual produto deseja remover? (digite o número)\n")
+            carrinho.splice(produto - 1, 1)
+            console.log("Carrinho atualizado:")
+            carrinho.forEach((item) => console.log(`${item.produto} - ${item.quantidade} - R$ ${item.preco}`))
+        } else if (opcao == 3){
+        console.log("Compra finalizada!")
+        let total = 0;
+        carrinho.forEach((item) => total += item.preco);
+        console.log(`Total: R$ ${total.toFixed(2)}`);
+        valorRecebido = prompt("Valor recebido: R$ ");
+        troco = valorRecebido - total;
+        console.log(`Troco: R$ ${troco.toFixed(2)}`);
+        console.log("Nota:");
+        carrinho.forEach((item) => console.log(`${item.produto} - ${item.quantidade} - R$ ${item.preco}`));
+        if (contasa.length > 0) {
+          console.log(`Obrigado, ${contasa[0]}!`);
+        } else {
+          console.log("Obrigado por sua compra!");
+        }
+        break;
+      }
+    }
+   }
+  inicio()
+}
+inicio()
